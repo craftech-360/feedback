@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style>
+      @import url('https://fonts.cdnfonts.com/css/biko');
+      *{
+        font-family: 'Biko', sans-serif;
+      }
+        body{
+          display: flex;
+          justify-content: center;
+          width: 100vw;
+          height: 100vh;
+          overflow: hidden;
+          padding: 0;
+          margin: 0;
+          background-color: black;
+        }
+        #img , #imgg{
+          padding: 0;
+          margin: 0;
+          background-size: auto 100%;
+          background-position: left top;
+        }
+        #im{
+          width: 120px;
+          margin: 20px;
+        }
+        form{
+          position: absolute;
+        }
+        @media only screen and (max-device-width: 480px) and (orientation: portrait) {
+        }
+        #symbol{
+          margin-top: 380px;
+        }
+        h1{
+          color: aliceblue;
+        }
+        #check{
+          color: aliceblue;
+          font-size: 28px;
+          margin-top: 400px;
+        }
+        .single-checkbox{
+          margin-left: 30px;
+        }
+        input[type=checkbox] {
+          padding: 0;
+          accent-color: #E0A021;
+        }
+        input.single-checkbox{
+
+          width: 30px;
+          height: 20px;
+        }
+        #textarea{
+          color: aliceblue;
+          font-size: 12px;
+          margin-top: 350px;
+          margin-left: 50px;
+        }
+        .in {
+          margin-left: 20px;
+          background: transparent;
+          border: none;
+          border: 2px solid #E0A021;
+          width: 400px;
+          height: 200px;
+          border-radius: 20px;
+        }
+    #info{
+      width: 500px;
+      margin-top: 350px;
+    }
+    input.ss{
+      width: 100%;
+      padding: 20px;
+      background: transparent;
+      border: none;
+      border: 1px solid  #E0A021;
+      border-radius: 15px;
+    }
+    #sub{
+      width: 200px;
+      margin-left: 200px ;
+      margin-top: 80px;
+    }
+    #nn{
+      font-size: 24px;
+      margin-left: 20px;
+    }
+    #next{
+      width: 200px;
+      margin-left: 140px;
+      margin-top: 80px;
+    }
+    textarea[type=text]{
+      padding: 15px;
+    color: aliceblue;
+    font-size: 24px;
+    }
+    input[type=text] {
+      color: aliceblue;
+      font-size: 24px;
+    }
+    h2{
+      color: aliceblue;
+      margin-top: 300px;
+      font-size: 36px;
+    }
+    input[type=text]:focus {
+      border: 1px solid #E0A021;
+      outline: none;
+    }
+    textarea[type=text]:focus{
+      border: 1px solid #E0A021;
+      outline: none;
+    }
+      </style>
+</head>
+<body>
+    <img id="img" src="./asset/images/Screen 6.png" alt="" >
+    <img id="imgg" src="./asset/images/Frame 3.png" alt="" style="display: none;">
+    <form>
+        <section id="symbol">
+          <h1>1.How was your experience?</h1>
+          <div style="display: flex;">
+            <img id="im" src="./asset/images/1 star.png" onclick="getSymbol('1')" alt="">
+            <img id="im" src="./asset/images/2 star.png" onclick="getSymbol('2')" alt="">
+            <img id="im" src="./asset/images/3 star.png" onclick="getSymbol('3')" alt="">
+            <img id="im" src="./asset/images/4 star.png" onclick="getSymbol('4')" alt="">
+            <img id="im" src="./asset/images/5 star.png" onclick="getSymbol('5')" alt="">
+          </div>
+        </section>
+
+        <div id="check" style="display: none;">
+            <p><strong>2.What went well for you? (Select your top 2)</strong></p>
+            <input class="single-checkbox"type="checkbox" name="vehicle" value="Exper Speaker Sessions.">Exper Speaker Sessions.<br>
+            <input class="single-checkbox" type="checkbox" name="vehicle" value="Panel Discussions">Panel Discussions.<br>
+            <input class="single-checkbox" type="checkbox" name="vehicle" value="AI Pavilion">AI Pavilion.<br>
+            <input class="single-checkbox" type="checkbox" name="vehicle" value="Ted Talks">Ted Talks.<br>
+            <input class="single-checkbox" type="checkbox" name="vehicle" value="Start-upPitching Event">Start-upPitching Event.<br>
+            <input class="single-checkbox" type="checkbox" name="vehicle" value="Meeting other AGB colleagues">Meeting other AGB colleagues.<br>
+        </div>
+
+
+         <div id="textarea"  style="display: none;" >
+          <h1>3.How cloud we have done better?</h1>
+          <textarea  class="in" type="text"  id="feedback" cols="30" rows="10"></textarea>
+          <br> 
+          <img type="submit" onclick="getTextarea()" id="next" src="./asset/images/Next.png" alt="">
+         </div> 
+
+
+         <div id="info" style="display: none;">
+          
+          <h1 id="nn"> Full Name</h1>
+          <input class="ss" type="text" id="name" autocomplete="off">
+
+          <h1 id="nn"> Phone Number</h1>
+          <input class="ss" type="text" id="nnn" autocomplete="off">
+
+          <img id="sub" src="./asset/images/Submit.png" alt="" onclick="getDetails()">
+         </div>
+    </form>
+    <script>
+
+const socket = io();
+      let saveData =[]
+
+      function getSymbol(e){
+        // alert(e)
+        // dataList = e
+        saveData.push(e)
+        // console.log(e);
+        document.getElementById('symbol').style.display = 'none';
+        document.getElementById('check').style.display = 'block';
+      }
+        var limit = 1;
+        var exp = []
+        $('input.single-checkbox').on('change', function(evt) {
+        if($(this).siblings(':checked')) {
+          // alert(this.value)
+          exp.push(this.value)
+          if($(this).siblings(':checked').length === limit){
+            saveData.push(exp)
+            // console.log(exp)
+            setTimeout(() => {
+            document.getElementById('textarea').style.display = 'block';
+            document.getElementById('check').style.display = 'none';
+            this.checked = false;
+            }, 1000)
+            
+          }
+        }
+        });
+
+        var txt;
+        function getTextarea(){
+          let data = document.getElementById('feedback').value
+          // alert(data)
+          // txt = data
+          saveData.push(data)
+          // console.log(data);
+          document.getElementById('textarea').style.display = 'none';
+          document.getElementById('info').style.display = 'block';
+        }
+
+        var name;
+        var mobile;
+        function getDetails() {
+          name = document.getElementById('name').value
+          mobile =  document.getElementById('nnn').value
+          saveData.push(name,mobile)
+        //  console.log(name,mobile);
+        //  alert(mobile)
+         document.getElementById('info').style.display = 'none';
+         document.getElementById('img').style.display = 'none';
+         document.getElementById('imgg').style.display = 'block';
+         socket.emit('save',saveData)
+         setTimeout(() => {
+          location.reload()
+         }, 10000)
+        }
+    </script>
+</body>
+</html>
